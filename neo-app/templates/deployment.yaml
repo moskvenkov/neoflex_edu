@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "neo-app.fullname" . }}
+  labels:
+    {{- include "neo-app.labels" . | nindent 4 }}
+  annotations:
+    {{- include "neo-app.annotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "neo-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "neo-app.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- include "neo-app.annotations" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.appName }}-container
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}

@@ -1,0 +1,29 @@
+# Основные параметры
+replicaCount: 1
+appName: "neo-app"
+image:
+  repository: moskvenkov/neo-java-app
+  tag: "latest"
+  pullPolicy: IfNotPresent # ускоряет развёртывание, если образ уже скачан
+
+# Конфигурация публикации приложения
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080
+  nodePort: 30010
+
+# Ресурсы
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+# Доп. настройки
+labels:
+  app: neo-app
+  environment: production
+  version: "1.0.0"  
